@@ -47,8 +47,8 @@ By default, the script globs all the training checkpoints inside the folder and 
 
 You should approximate the following results :
 
-| Task Accuracy       val | test | test ensemble |
-| ------------- |:-------------:|:-------------:|
+| Task Accuracy  |     val | test | test ensemble |
+| ------------- |:-------------:|:-------------:|:-------------:|
 | Sentiment-7    | 43.61 |  44.40 | 45.23|
 | Sentiment-2    |       |    | |
 | Emotion        | 81.06 |  81.07 | 81.23 |
