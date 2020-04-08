@@ -29,8 +29,9 @@ To train a model-bi model, use the following command :
 ```
 python main.py --model model_bi --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 6 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
+Checkpoints are created in folder `ckpt/mymodel`
 
-Argument `task` can be set to emotion or sentiment. To make a binarized sentiment training (positive or negative), use `--task_binary True`
+Argument `task` can be set to `emotion` or `sentiment`. To make a binarized sentiment training (positive or negative), use `--task_binary True`
 
 #### Evaluation 
 
