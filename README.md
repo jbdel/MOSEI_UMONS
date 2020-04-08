@@ -4,7 +4,7 @@ The model-bi is the module used for the UMONS solution to the MOSEI dataset usin
 
 #### Environement
 
-Create a 3.6 python environement.
+Create a 3.6 python environement with:
 ```
 torch              1.2.0    
 torchvision        0.4.0   
@@ -18,7 +18,7 @@ pip install en_vectors_web_lg-2.1.0.tar.gz
 ```
 #### Data
 
-Download data from here : <br/>
+Download data from [here](https://drive.google.com/uc?id=130P2EJPKL_9bpjoXpYAAIgqVi62rHxVC&export=download) : <br/>
 Unzip the files into the 'data' folder<br/>
 More informations about the data can be found in the 'data' folder<br/>
 
@@ -54,7 +54,7 @@ You should approximate the following results :
 | Emotion  | 81.06    |    -  |
 
 Ensemble results are of max 5 single models <br>
-7-class and 2-class sentiment models have been train according to [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/tree/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI).<br>
+7-class and 2-class sentiment models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
 
 #### Pretrained checkpoints:
 
@@ -63,7 +63,7 @@ For `Sentiment-7` obtained from:
 ```
 python main.py --seed 6510310 --model model_bi --name glimpse_e_new --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 6 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
-Click [here]()
+is available [here]()
 
 For `Sentiment-2` obtained from:
 
