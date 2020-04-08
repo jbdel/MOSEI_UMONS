@@ -47,15 +47,29 @@ By default, the script globs all the training checkpoints inside the folder and 
 
 You should approximate the following results :
 
-| Task Accuracy        | single | ensemble  
-| ------------- |:-------------:|
-| Sentiment-7    | 40.66 | 60.06 |
-| Sentiment-2    | 34.06      |   54.94 |
-| Emotion  | 31.08      |    50.43 |
+| Task Accuracy        | single | ensemble |
+| ------------- |:-------------:|:-------------:|
+| Sentiment-7    | 43.61 | 45.23 |
+| Sentiment-2    |       |    |
+| Emotion  | 81.06    |    -  |
 
 Ensemble results are of max 5 single models <br>
-
 7-class and 2-class sentiment models have been train according to [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/tree/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI).<br>
+
+#### Pretrained checkpoints:
+
+For `Sentiment-7` obtained from:
+
+```
+python main.py --seed 6510310 --model model_bi --name glimpse_e_new --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 6 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+```
+Click [here]()
+
+For `Sentiment-2` obtained from:
+
+
+For `Emotion` obtained from:
+
 
 
 
