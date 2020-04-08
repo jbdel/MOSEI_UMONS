@@ -47,11 +47,11 @@ By default, the script globs all the training checkpoints inside the folder and 
 
 You should approximate the following results :
 
-| Task Accuracy        | single | ensemble |
+| Task Accuracy       val | test | test ensemble |
 | ------------- |:-------------:|:-------------:|
-| Sentiment-7    | 43.61 | 45.23 |
-| Sentiment-2    |       |    |
-| Emotion  | 81.06    |    -  |
+| Sentiment-7    | 43.61 |  44.40 | 45.23|
+| Sentiment-2    |       |    | |
+| Emotion        | 81.06 |  81.07 | 81.23 |
 
 Ensemble results are of max 5 single models <br>
 7-class and 2-class sentiment models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
