@@ -13,7 +13,6 @@ numpy              1.18.1
 
 We use GloVe vectors from space. This can be installed to your environement using the following commands :
 ```
-pip install -r requirements.txt
 wget https://github.com/explosion/spacy-models/releases/download/en_vectors_web_lg-2.1.0/en_vectors_web_lg-2.1.0.tar.gz -O en_vectors_web_lg-2.1.0.tar.gz
 pip install en_vectors_web_lg-2.1.0.tar.gz
 ```
