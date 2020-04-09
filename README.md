@@ -27,7 +27,7 @@ More informations about the data can be found in the 'data' folder<br/>
 To train a model-bi model, use the following command :
 
 ```
-python main.py --model model_bi --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 6 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --model model_bi --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 Checkpoints are created in folder `ckpt/mymodel`
 
@@ -45,13 +45,14 @@ By default, the script globs all the training checkpoints inside the folder and 
 
 #### Results:
 
+Results are run on a single GeForce GTX 1080 Ti.
 You should approximate the following results :
 
-| Task Accuracy  |     val | test | test ensemble |
-| ------------- |:-------------:|:-------------:|:-------------:|
-| Sentiment-7    | 43.61 |  44.40 | 45.23|
-| Sentiment-2    |       |    | |
-| Emotion        | 81.06 |  81.07 | 81.23 |
+| Task Accuracy  |     val | test | test ensemble | epochs | Memory usage |
+| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Sentiment-7    | 43.66 |  44.05 | 45.23  |      | 2400MiB
+| Sentiment-2    |       |        |        |      | 2400MiB
+| Emotion        | 81.06 |  81.07 | 81.23  |      | 2400MiB
 
 Ensemble results are of max 5 single models <br>
 7-class and 2-class sentiment models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
