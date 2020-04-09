@@ -45,14 +45,20 @@ By default, the script globs all the training checkpoints inside the folder and 
 
 #### Results:
 
-Results are run on a single GeForce GTX 1080 Ti.
+Results are run on a single GeForce GTX 1080 Ti.<br>
+Training performances:
+| Modality                          |     Memory Usage  | GPU Usage  |  sec / epoch | 
+| ------------- |:-------------:|:-------------:|:-------------:|
+| Linguistic + acoustic             | 2700 MiB | 2400 MiB |  103 | 
+| Linguistic + acoustic + vision    |
+
 You should approximate the following results :
 
-| Task Accuracy  |     val | test | test ensemble | epochs | Memory usage |
-| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-| Sentiment-7    | 43.66 |  44.46 | 45.51  |      | 2400MiB
-| Sentiment-2    |       |        |        |      | 2400MiB
-| Emotion        | 81.06 |  81.07 | 81.23  |      | 2400MiB
+| Task Accuracy  |     val | test | test ensemble | epochs | 
+| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
+| Sentiment-7    | 43.66 |  44.46 | 45.51  | 6      
+| Sentiment-2    |       |        |        |      
+| Emotion        | 81.06 |  81.07 | 81.23  |      
 
 Ensemble results are of max 5 single models <br>
 7-class and 2-class sentiment models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
@@ -62,14 +68,14 @@ Ensemble results are of max 5 single models <br>
 Result `Sentiment-7` is obtained from:
 
 ```
-python main.py --seed 8206597 --model Model_bi_clean --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --seed 8206597 --model Model_bi_clean --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 
 Result `Sentiment-7 ensemble` is obtained from:
 ```
 for seed in 8206597 3569479 2810648 9250778
 do
-  python main.py --seed ${seed} --model Model_bi_clean --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+  python main.py --seed ${seed} --model Model_bi_clean --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 done 
 ```
 
