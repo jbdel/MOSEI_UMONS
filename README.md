@@ -56,9 +56,9 @@ You should approximate the following results :
 
 | Task Accuracy  |     val | test | test ensemble | epochs | 
 | ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
-| Sentiment-7    | 43.66 |  44.46 | 45.51  | 6      
-| Sentiment-2    |       |        |        |      
-| Emotion-6      | 80.91 |  81.18 | 81.34  |  4    
+| Sentiment-7    | 43.66   |  44.46  | 45.51  | 6      
+| Sentiment-2    |  81.77  |  81.91  | 82.02  |  8        
+| Emotion-6      | 80.91   |  81.18  | 81.34  |  4    
 
 Ensemble results are of max 5 single models <br>
 7-class and 2-class sentiment and emotion models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
@@ -79,16 +79,27 @@ do
 done 
 python ensembling.py --name mymodel
 ```
-Result `Sentiment-2` obtained from:
+Result `Sentiment-2` is obtained from:
 
+```
+python main.py --seed 9480441 --model Model_AV --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+```
 
-Result `Emotion` obtained from:
+Result `Sentiment-2 ensemble` is obtained from:
+```
+for seed in 9480441 3978530 4739987 
+do
+  python main.py --seed ${seed} --model Model_AV --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+done 
+python ensembling.py --name mymodel
+```
+Result `Emotion` is obtained from:
 
 ```
 python main.py --seed 5104023 --model Model_AV --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 
-Result `Emotion ensemble` obtained from:
+Result `Emotion ensemble` is obtained from:
 ```
 for seed in 5104023 1287654 8261993
 do
