@@ -2,16 +2,8 @@ import argparse
 import torch
 from torch.utils.data import DataLoader
 from mosei_dataset import Mosei_Dataset
-from net import MCA
-from JB import JB
-from glimpse import GLIMPSE
-from glimpse2 import GLIMPSE2
-from glimpse3 import GLIMPSE3
-from model_bi import GLIMPSE4
-from glimpse5 import GLIMPSE5
-from glimpse6 import GLIMPSE6
-from mono import MONO
-import random
+from model_LA import Model_LA
+from model_LAV import Model_LAV
 
 from train import evaluate
 import glob
@@ -64,6 +56,7 @@ if __name__ == '__main__':
         ens_accuracy = []
         for step, (
                 ids,
+                _,
                 _,
                 _,
                 ans,

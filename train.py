@@ -32,6 +32,7 @@ def train(net, train_loader, eval_loader, args):
                 id,
                 x,
                 y,
+                z,
                 ans,
         ) in enumerate(train_loader):
 
@@ -40,9 +41,11 @@ def train(net, train_loader, eval_loader, args):
 
             x = x.cuda()
             y = y.cuda()
+            z = z.cuda()
+
             ans = ans.cuda()
 
-            pred = net(x, y)
+            pred = net(x, y, z)
             loss = loss_fn(pred, ans)
             loss.backward()
 
@@ -139,11 +142,13 @@ def evaluate(net, eval_loader, args):
             ids,
             x,
             y,
+            z,
             ans,
     ) in enumerate(eval_loader):
         x = x.cuda()
         y = y.cuda()
-        pred = net(x, y).cpu().data.numpy()
+        z = z.cuda()
+        pred = net(x, y, z).cpu().data.numpy()
         ans = ans.cpu().data.numpy()
         if args.task == "sentiment":
             accuracy += list(np.argmax(pred, axis=1) == np.argmax(ans, axis=1))

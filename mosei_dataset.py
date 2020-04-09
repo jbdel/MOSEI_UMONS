@@ -18,13 +18,16 @@ class Mosei_Dataset(Dataset):
         word_file = os.path.join(dataroot, "w_"+name+".pkl")
         # audio_file = os.path.join(dataroot, "mel_"+name+"_short.p")
         audio_file = os.path.join(dataroot, "mag_"+name+"_r_16.p")
-        # audio_file = os.path.join(dataroot, "mel_"+name+".pkl")
+        video_file = os.path.join(dataroot, "r21d_"+name+".pkl")
+
         sy_file = os.path.join(dataroot, "sy_"+name+".pkl")
         ey_file = os.path.join(dataroot, "ey_"+name+".pkl")
 
         self.index_to_video_id = pickle.load(open(id_file, "rb"))
         self.index_to_word = pickle.load(open(word_file, "rb"))
         self.index_to_audio = pickle.load(open(audio_file, "rb"))
+        self.index_to_video = pickle.load(open(video_file, "rb"))
+
         if args.task == "emotion":
             self.index_to_label = pickle.load(open(ey_file, "rb"))
         if args.task == "sentiment":
@@ -38,8 +41,8 @@ class Mosei_Dataset(Dataset):
 
 
         # big = []
-        # for key in self.index_to_audio.keys():
-        #     x = self.index_to_audio[key].shape[0]
+        # for key in self.index_to_video.keys():
+        #     x = self.index_to_video[key].shape[0]
         #     big.append(x)
         # plot(big)
         # sys.exit()
@@ -62,9 +65,9 @@ class Mosei_Dataset(Dataset):
         self.vocab_size = len(self.token_to_ix)
         self.l_max_len = args.lang_seq_len
         self.a_max_len = args.audio_seq_len
+        self.v_max_len = args.video_seq_len
 
     def __getitem__(self, idx):
-        # l = self.pad_feature(self.index_to_word[index][1], self.max_len)
 
         #video_id
         id = self.index_to_video_id[idx][0]
@@ -72,6 +75,7 @@ class Mosei_Dataset(Dataset):
         l = sent_to_ix(self.sentence_list[idx], self.token_to_ix, max_token=self.l_max_len)
         # audio
         a = pad_feature(self.index_to_audio[idx], self.a_max_len)
+        v = pad_feature(self.index_to_video[id], self.v_max_len)
         #label
         label = self.index_to_label[idx][1]
         if self.args.task == "sentiment" and self.args.task_binary:
@@ -86,7 +90,7 @@ class Mosei_Dataset(Dataset):
             label[label > 0] = 1
             y = label
 
-        return id, torch.from_numpy(l), torch.from_numpy(a), torch.from_numpy(y)
+        return id, torch.from_numpy(l), torch.from_numpy(a), torch.from_numpy(v).float(), torch.from_numpy(y)
 
     def __len__(self):
         return len(self.index_to_video_id)

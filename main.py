@@ -2,29 +2,29 @@ import argparse
 import torch
 from torch.utils.data import DataLoader
 from mosei_dataset import Mosei_Dataset
-from model_bi import Model_bi
+from model_LA import Model_LA
+from model_LAV import Model_LAV
 import random
-from train import train, evaluate
+from train import train
 import os
 
 def parse_args():
     parser = argparse.ArgumentParser()
     # Model
-    parser.add_argument('--model', type=str, default="Model_bi")#choices=["MCA", "JB", "GLIMPSE"])
+    parser.add_argument('--model', type=str, default="Model_LA", choices=["Model_LA", "Model_LAV"])
     parser.add_argument('--layer', type=int, default=4)
     parser.add_argument('--hidden_size', type=int, default=512)
     parser.add_argument('--dropout_r', type=float, default=0.1)
     parser.add_argument('--multi_head', type=int, default=8)
     parser.add_argument('--ff_size', type=int, default=2048)
     parser.add_argument('--word_embed_size', type=int, default=300)
-    parser.add_argument('--flat_mlp_size', type=int, default=512)
-    parser.add_argument('--flat_glimpses', type=int, default=1)
 
     # Data
-    parser.add_argument('--audio_seq_len', type=int, default=60)
     parser.add_argument('--lang_seq_len', type=int, default=60)
-    parser.add_argument('--img_feat_size', type=int, default=1024)
+    parser.add_argument('--audio_seq_len', type=int, default=60)
+    parser.add_argument('--video_seq_len', type=int, default=60)
     parser.add_argument('--audio_feat_size', type=int, default=1025)
+    parser.add_argument('--video_feat_size', type=int, default=512)
 
     # Training
     parser.add_argument('--output', type=str, default='ckpt/')
@@ -49,6 +49,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
     args = parse_args()
     print(args)
@@ -71,19 +72,3 @@ if __name__ == '__main__':
         os.makedirs(args.output + "/" + args.name)
 
     eval_accuracies = train(net, train_loader, eval_loader, args)
-
-    # #testing
-    # test_dset = Mosei_Dataset('test', args, train_dset.token_to_ix)
-    # test_loader = DataLoader(test_dset, batch_size, num_workers=8, pin_memory=True)
-    #
-    # state_dict = torch.load(args.output + "/" + args.name +
-    #                         '/best' + str(max(eval_accuracies)) + "_" + str(args.seed)+'.pkl')['state_dict']
-    # net.load_state_dict(state_dict)
-    #
-    # test_accuracy, _ = evaluate(net, test_loader)
-    # print("Test accuracy:", test_accuracy)
-    # with open("best_scores", "a+") as f:
-    #     f.write(args.output + "/" + args.name + ","
-    #             + str(test_accuracy) + "("
-    #             + str(max(eval_accuracies))+") | ("
-    #             + str(eval_accuracies) + ")\n")
