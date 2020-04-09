@@ -58,7 +58,7 @@ You should approximate the following results :
 | ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
 | Sentiment-7    | 43.66   |  44.46  | 45.51  | 6      
 | Sentiment-2    |  81.77  |  81.91  | 82.02  |  8        
-| Emotion-6      | 80.91   |  81.18  | 81.34  |  4    
+| Emotion-6      | 80.91   |  81.18  | 81.34  |  3    
 
 Ensemble results are of max 5 single models <br>
 7-class and 2-class sentiment and emotion models have been train according to instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
