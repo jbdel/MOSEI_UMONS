@@ -27,7 +27,7 @@ More informations about the data can be found in the 'data' folder<br/>
 To train a Model_AV model, use the following command :
 
 ```
-python main.py --model Model_AV --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --model Model_LA --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 Checkpoints are created in folder `ckpt/mymodel`
 
@@ -68,42 +68,42 @@ Ensemble results are of max 5 single models <br>
 Result `Sentiment-7` is obtained from:
 
 ```
-python main.py --seed 8206597 --model Model_AV --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --seed 8206597 --model Model_LA --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 
 Result `Sentiment-7 ensemble` is obtained from:
 ```
 for seed in 8206597 3569479 2810648 9250778
 do
-  python main.py --seed ${seed} --model Model_AV --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+  python main.py --seed ${seed} --model Model_LA --name mymodel --task sentiment --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 done 
 python ensembling.py --name mymodel
 ```
 Result `Sentiment-2` is obtained from:
 
 ```
-python main.py --seed 9480441 --model Model_AV --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --seed 9480441 --model Model_LA --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 
 Result `Sentiment-2 ensemble` is obtained from:
 ```
 for seed in 9480441 3978530 4739987 
 do
-  python main.py --seed ${seed} --model Model_AV --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+  python main.py --seed ${seed} --model Model_LA --name mymodel --task sentiment --task_binary True --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 done 
 python ensembling.py --name mymodel
 ```
 Result `Emotion` is obtained from:
 
 ```
-python main.py --seed 5104023 --model Model_AV --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+python main.py --seed 5104023 --model Model_LA --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 ```
 
 Result `Emotion ensemble` is obtained from:
 ```
 for seed in 5104023 1287654 8261993
 do
-  python main.py --seed ${seed} --model Model_AV --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
+  python main.py --seed ${seed} --model Model_LA --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
 done 
 python ensembling.py --name mymodel
 ```
