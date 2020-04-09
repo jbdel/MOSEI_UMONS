@@ -48,7 +48,7 @@ By default, the script globs all the training checkpoints inside the folder and 
 Results are run on a single GeForce GTX 1080 Ti.<br>
 Training performances:
 | Modality                          |     Memory Usage  | GPU Usage  |  sec / epoch | Parameters | 
-| ------------- |:-------------:|:-------------:|:-------------:|
+| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
 | Linguistic + acoustic             | 2700 MiB | 2400 MiB |  103 | 33 M
 | Linguistic + acoustic + vision    |
 
