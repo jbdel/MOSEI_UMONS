@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument('--lang_seq_len', type=int, default=60)
     parser.add_argument('--audio_seq_len', type=int, default=60)
     parser.add_argument('--video_seq_len', type=int, default=60)
-    parser.add_argument('--audio_feat_size', type=int, default=1025)
+    parser.add_argument('--audio_feat_size', type=int, default=80)
     parser.add_argument('--video_feat_size', type=int, default=512)
 
     # Training

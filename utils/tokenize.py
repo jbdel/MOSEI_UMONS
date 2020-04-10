@@ -14,14 +14,14 @@ def clean(w):
             ).replace('-', ' ').replace('/', ' ')
 
 
-def tokenize(index_to_word):
-    sentences_list = []
-    for ind in range(len(index_to_word)):
-        sentences_list.append([clean(w[0]) for w in index_to_word[ind][1]])
-    return sentences_list
+def tokenize(key_to_word):
+    key_to_sentence = {}
+    for k, v in key_to_word.items():
+        key_to_sentence[k] = [clean(w[0]) for w in v]
+    return key_to_sentence
 
 
-def create_dict(sentence_list, dataroot, use_glove=True):
+def create_dict(key_to_sentence, dataroot, use_glove=True):
     token_file = dataroot+"/token_to_ix.pkl"
     glove_file = dataroot+"/train_glove.npy"
     if os.path.exists(glove_file) and os.path.exists(token_file):
@@ -39,8 +39,8 @@ def create_dict(sentence_list, dataroot, use_glove=True):
         spacy_tool = en_vectors_web_lg.load()
         pretrained_emb.append(spacy_tool('UNK').vector)
 
-    for s in sentence_list:
-        for word in s:
+    for k, v in key_to_sentence.items():
+        for word in v:
             if word not in token_to_ix:
                 token_to_ix[word] = len(token_to_ix)
                 if use_glove:
