@@ -1,7 +1,8 @@
 #### Model
 
 The model Model_AV is the module used for the UMONS solution to the MOSEI dataset using only linguistic and acoustic inputs.<br/>
-Results can be replicated at the following Google Colab Sheet [here](https://drive.google.com/file/d/1MElwNNGBABeSqTa6WCWV5vnMrFtYlVbp/view?usp=sharing)
+Results can be replicated at the following Google Colab sheet: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://drive.google.com/file/d/1MElwNNGBABeSqTa6WCWV5vnMrFtYlVbp/view?usp=sharing)]
+
 
 #### Environement
 
