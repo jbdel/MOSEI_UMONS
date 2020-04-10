@@ -7,6 +7,7 @@ from model_LAV import Model_LAV
 import random
 from train import train
 import os
+import numpy as np
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -54,8 +55,9 @@ if __name__ == '__main__':
     args = parse_args()
     print(args)
     torch.manual_seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
-    torch.backends.cudnn.benchmark = True
+    np.random.seed(args.seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
     train_dset = Mosei_Dataset('train', args)
     eval_dset = Mosei_Dataset('valid', args, train_dset.token_to_ix)
