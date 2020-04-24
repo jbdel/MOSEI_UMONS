@@ -1,10 +1,9 @@
-from utils.optim import get_optim, adjust_lr
 import torch
 import torch.nn as nn
 import time
 import numpy as np
-import pickle
 import os
+from utils.pred_func import *
 
 def train(net, train_loader, eval_loader, args):
 
@@ -21,8 +20,9 @@ def train(net, train_loader, eval_loader, args):
     decay_count = 0
 
     # Load the optimizer paramters
-    optim = get_optim(args, net, len(train_loader.dataset))
-    loss_fn = torch.nn.BCEWithLogitsLoss(reduction="sum").cuda()
+    optim = torch.optim.Adam(net.parameters(), lr=args.lr_base)
+
+    loss_fn = args.loss_fn
     eval_accuracies = []
     for epoch in range(0, args.max_epoch):
 
@@ -42,7 +42,6 @@ def train(net, train_loader, eval_loader, args):
             x = x.cuda()
             y = y.cuda()
             z = z.cuda()
-
             ans = ans.cuda()
 
             pred = net(x, y, z)
@@ -58,7 +57,7 @@ def train(net, train_loader, eval_loader, args):
                       step,
                       int(len(train_loader.dataset) / args.batch_size),
                       loss_tmp / args.batch_size,
-                      optim._rate,
+                      *[group['lr'] for group in optim.param_groups],
                       ((time.time() - time_start) / (step + 1)) * ((len(train_loader.dataset) / args.batch_size) - step) / 60,
                   ), end='          ')
 
@@ -80,7 +79,7 @@ def train(net, train_loader, eval_loader, args):
         logfile.write(
             'Epoch: ' + str(epoch_finish) +
             ', Loss: ' + str(loss_sum / len(train_loader.dataset)) +
-            ', Lr: ' + str(optim._rate) + '\n' +
+            ', Lr: ' + str([group['lr'] for group in optim.param_groups]) + '\n' +
             'Elapsed time: ' + str(int(elapse_time)) +
             ', Speed(s/batch): ' + str(elapse_time / step) +
             '\n\n'
@@ -96,7 +95,7 @@ def train(net, train_loader, eval_loader, args):
                 # Best
                 state = {
                     'state_dict': net.state_dict(),
-                    'optimizer': optim.optimizer.state_dict(),
+                    'optimizer': optim.state_dict(),
                     'args': args,
                 }
                 torch.save(
@@ -113,7 +112,9 @@ def train(net, train_loader, eval_loader, args):
                 decay_count += 1
                 net.load_state_dict(torch.load(args.output + "/" + args.name +
                                                '/best'+str(args.seed)+'.pkl')['state_dict'])
-                adjust_lr(optim, args.lr_decay)
+                # adjust_lr(optim, args.lr_decay)
+                for group in optim.param_groups:
+                    group['lr'] *= args.lr_decay
 
             else:
                 # Early stop
@@ -137,7 +138,6 @@ def evaluate(net, eval_loader, args):
     accuracy = []
     net.train(False)
     preds = {}
-
     for step, (
             ids,
             x,
@@ -149,11 +149,11 @@ def evaluate(net, eval_loader, args):
         y = y.cuda()
         z = z.cuda()
         pred = net(x, y, z).cpu().data.numpy()
-        ans = ans.cpu().data.numpy()
-        if args.task == "sentiment":
-            accuracy += list(np.argmax(pred, axis=1) == np.argmax(ans, axis=1))
-        if args.task == "emotion":
-            accuracy += list((pred > 0) == ans)
+
+        if not eval_loader.dataset.private_set:
+            ans = ans.cpu().data.numpy()
+            accuracy += list(eval(args.pred_func)(pred) == ans)
+            
         # Save preds
         for id, p in zip(ids, pred):
             preds[id] = p

@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from layers.fc import MLP
+from layers.fc import MLP, FC
 from layers.layer_norm import LayerNorm
 
 # ------------------------------------
@@ -287,15 +287,15 @@ class Model_LA(nn.Module):
             batch_first=True
         )
 
-        # self.lstm_y = nn.LSTM(
-        #     input_size=args.audio_feat_size,
-        #     hidden_size=args.hidden_size,
-        #     num_layers=1,
-        #     batch_first=True
-        # )
+        self.lstm_y = nn.LSTM(
+            input_size=args.audio_feat_size,
+            hidden_size=args.hidden_size,
+            num_layers=1,
+            batch_first=True
+        )
 
         # Feature size to hid size
-        self.adapter = nn.Linear(args.audio_feat_size, args.hidden_size)
+        # self.adapter = nn.Linear(args.audio_feat_size, args.hidden_size)
 
         # Encoder blocks
         self.enc_list = nn.ModuleList([Block(args, i) for i in range(args.layer)])
@@ -306,24 +306,18 @@ class Model_LA(nn.Module):
 
         # Classification layers
         self.proj_norm = LayerNorm(2 * args.hidden_size)
-        if self.args.task == "sentiment":
-            if self.args.task_binary:
-                self.proj = nn.Linear(2 * args.hidden_size, 2)
-            else:
-                self.proj = nn.Linear(2 * args.hidden_size, 7)
-        if self.args.task == "emotion":
-            self.proj = self.proj = nn.Linear(2 * args.hidden_size, 6)
+        self.proj = self.proj = nn.Linear(2 * args.hidden_size, args.ans_size)
 
-    def forward(self, x, y, z):
+    def forward(self, x, y, _):
         x_mask = make_mask(x.unsqueeze(2))
         y_mask = make_mask(y)
 
         embedding = self.embedding(x)
 
         x, _ = self.lstm_x(embedding)
-        # y, _ = self.lstm_y(y)
+        y, _ = self.lstm_y(y)
 
-        y = self.adapter(y)
+        # y = self.adapter(y)
 
         for i, dec in enumerate(self.enc_list):
             x_m, x_y = None, None

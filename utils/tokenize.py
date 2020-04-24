@@ -17,7 +17,7 @@ def clean(w):
 def tokenize(key_to_word):
     key_to_sentence = {}
     for k, v in key_to_word.items():
-        key_to_sentence[k] = [clean(w[0]) for w in v]
+        key_to_sentence[k] = [clean(w[0]) for w in v if clean(w[0]) != '']
     return key_to_sentence
 
 
@@ -65,23 +65,6 @@ def sent_to_ix(s, token_to_ix, max_token=100):
 
     return ques_ix
 
-
-# def cmumosei_round(a):
-#     if a < -2:
-#         res = -3
-#     if -2 <= a and a < -1:
-#         res = -2
-#     if -1 <= a and a < 0:
-#         res = -1
-#     if 0 <= a and a <= 0:
-#         res = 0
-#     if 0 < a and a <= 1:
-#         res = 1
-#     if 1 < a and a <= 2:
-#         res = 2
-#     if a > 2:
-#         res = 3
-#     return res
 
 def cmumosei_7(a):
     if a < -2:

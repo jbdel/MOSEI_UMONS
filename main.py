@@ -1,13 +1,13 @@
-import argparse
+import argparse, os, random
 import torch
 from torch.utils.data import DataLoader
 from mosei_dataset import Mosei_Dataset
+from meld_dataset import Meld_Dataset
 from model_LA import Model_LA
 from model_LAV import Model_LAV
-import random
 from train import train
-import os
 import numpy as np
+from utils.compute_args import compute_args
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -43,7 +43,8 @@ def parse_args():
     parser.add_argument('--early_stop', type=int, default=3)
     parser.add_argument('--seed', type=int, default=random.randint(0, 9999999))
 
-    # Task
+    # Dataset and task
+    parser.add_argument('--dataset', type=str, choices=['MELD', 'MOSEI'], default='MOSEI')
     parser.add_argument('--task', type=str, choices=['sentiment', 'emotion'], default='sentiment')
     parser.add_argument('--task_binary', type=bool, default=False)
 
@@ -52,25 +53,29 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    print(args)
+    # Base on args given, compute new args
+    args = compute_args(parse_args())
+
+    # Seed
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    train_dset = Mosei_Dataset('train', args)
-    eval_dset = Mosei_Dataset('valid', args, train_dset.token_to_ix)
-    batch_size = args.batch_size
+    # DataLoader
+    train_dset = eval(args.dataloader)('train', args)
+    eval_dset = eval(args.dataloader)('valid', args, train_dset.token_to_ix)
+    train_loader = DataLoader(train_dset, args.batch_size, shuffle=True, num_workers=8, pin_memory=True)
+    eval_loader = DataLoader(eval_dset, args.batch_size, num_workers=8, pin_memory=True)
 
+    # Net
     net = eval(args.model)(args, train_dset.vocab_size, train_dset.pretrained_emb).cuda()
     print("Total number of parameters : " + str(sum([p.numel() for p in net.parameters()]) / 1e6) + "M")
     net = net.cuda()
 
-    train_loader = DataLoader(train_dset, batch_size, shuffle=True, num_workers=8, pin_memory=True)
-    eval_loader = DataLoader(eval_dset, batch_size, num_workers=8, pin_memory=True)
+    # Create Checkpoint dir
+    if not os.path.exists(os.path.join(args.output, args.name)):
+        os.makedirs(os.path.join(args.output, args.name))
 
-    if not os.path.exists(args.output + "/" + args.name):
-        os.makedirs(args.output + "/" + args.name)
-
+    # Run training
     eval_accuracies = train(net, train_loader, eval_loader, args)
