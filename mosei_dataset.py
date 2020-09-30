@@ -20,7 +20,7 @@ class Mosei_Dataset(Dataset):
         self.name = name
         self.args = args
         self.private_set = name == 'private'
-        self.dataroot = os.path.join(dataroot,'MOSEI')
+        #self.dataroot = os.path.join(dataroot,'MOSEI')
 
         word_file = os.path.join(self.dataroot, "L_" + name + ".pkl")
         audio_file = os.path.join(self.dataroot, "A_" + name + "_MEL.pkl")
