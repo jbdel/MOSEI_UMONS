@@ -22,11 +22,11 @@ class Mosei_Dataset(Dataset):
         self.private_set = name == 'private'
         self.dataroot = os.path.join(dataroot,'MOSEI')
 
-        word_file = os.path.join(self.dataroot, name + "_sentences.p")
-        audio_file = os.path.join(self.dataroot, name + "_mels.p")
-        video_file = os.path.join(self.dataroot, name + "_r21d.p")
-        y_s_file = os.path.join(self.dataroot, name + "_sentiment.p")
-        y_e_file = os.path.join(self.dataroot, name + "_emotion.p")
+        word_file = os.path.join(self.dataroot, "L_" + name + ".pkl")
+        audio_file = os.path.join(self.dataroot, "A_" + name + "_MEL.pkl")
+        video_file = os.path.join(self.dataroot, "V_" + name + "_r21d.pkl")
+        y_s_file = os.path.join(self.dataroot, "Y_S_" + name + ".pkl")
+        y_e_file = os.path.join(self.dataroot, "Y_E_" + name + ".pkl")
 
         self.set = eval(name.upper()+"_SET")
         self.key_to_word = pickle.load(open(word_file, "rb"))
