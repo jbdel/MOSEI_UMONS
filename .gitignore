@@ -1,3 +1,4 @@
 data/
 utils/__pycache__/
 .ipynb_checkpoints/
+*.json
