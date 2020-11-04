@@ -75,7 +75,7 @@ if __name__ == '__main__':
             # Compute set ensembling accuracy
             # Get all ids and answers
             ids = [id for ids, _, _, _, _ in loaders[set] for id in ids]
-            ans = [a for _, _, _, _, ans in loaders[set] for a in ans]
+            ans = [a.numpy() for _, _, _, _, ans in loaders[set] for a in ans]
 
             # for all id, get averaged probabilities
             avg_preds = np.array([np.mean(np.array(ensemble_preds[set][id]), axis=0) for id in ids])

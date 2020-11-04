@@ -46,7 +46,7 @@ def parse_args():
     # Dataset and task
     parser.add_argument('--dataset', type=str, choices=['MELD', 'MOSEI'], default='MOSEI')
     parser.add_argument('--task', type=str, choices=['sentiment', 'emotion'], default='sentiment')
-    parser.add_argument('--task_binary', type=bool, default=False)
+    parser.add_argument('--task_binary', type=bool, default=False, action='store_true')
 
     args = parser.parse_args()
     return args
