@@ -44,11 +44,20 @@ class MOSEIRegression(Dataset):
                torch.FloatTensor([[1,0] if x=='user' else [0,1] for x in\
                                   self.videoSpeakers[vid]]),\
                torch.FloatTensor([1]*len(self.videoLabels[vid])),\
-               torch.FloatTensor(self.videoLabels[vid])
+               torch.FloatTensor(self.videoLabels[vid]),\
+               vid
 
     def __len__(self):
         return self.len
 
     def collate_fn(self, data):
         dat = pd.DataFrame(data)
-        return [pad_sequence(dat[i]) if i<4 else pad_sequence(dat[i], True) for i in dat]
+        batch = []
+        for i in dat:
+            if i < 4:
+                batch.append(pad_sequence(dat[i]))
+            elif i < 6:
+                batch.append(pad_sequence(dat[i], True))
+        padded_len = batch[-1].shape[1]
+        batch.insert(0, [vid + ':' + str(i) for vid in dat[6] for i in range(padded_len)])
+        return batch

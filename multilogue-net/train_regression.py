@@ -29,13 +29,13 @@ def get_MOSEI_loaders(path, batch_size=128, valid=0.1, num_workers=0, pin_memory
     return train_loader, valid_loader, test_loader
 
 def train_or_eval_model(model, loss_function, dataloader, epoch, optimizer=None, train=False, cuda=True): 
-    losses, preds, labels, masks = [], [], [], []
+    losses, preds, labels, masks, sample_ids = [], [], [], [], []
     assert not train or optimizer!=None
     if train:
         model.train()
     else:
         model.eval()
-    for data in dataloader:
+    for video_ids, *data in dataloader:
         if train:
             optimizer.zero_grad()
         textf, visuf, acouf, qmask, umask, label = [d.cuda() for d in data] if cuda else data
@@ -47,20 +47,22 @@ def train_or_eval_model(model, loss_function, dataloader, epoch, optimizer=None,
         labels.append(labels_.data.cpu().numpy())
         masks.append(umask_.cpu().numpy())
         losses.append(loss.item()*masks[-1].sum())
+        sample_ids.extend(video_ids)
         if train:
             loss.backward()
             optimizer.step()
-    if preds!=[]:
+    if preds != []:
         preds  = np.concatenate(preds)
         labels = np.concatenate(labels)
         masks  = np.concatenate(masks)
     else:
-        return float('nan'), float('nan'), float('nan'), [], [], []
+        return float('nan'), float('nan'), float('nan'), [], [], [], []
     avg_loss = round(np.sum(losses)/np.sum(masks),4)
     mae = round(mean_absolute_error(labels,preds,sample_weight=masks),4)
     pred_lab = pd.DataFrame(list(filter(lambda x: x[2]==1, zip(labels, preds, masks))))
     pear = round(pearsonr(pred_lab[0], pred_lab[1])[0], 4)
-    return avg_loss, mae, pear, labels, preds, masks
+    return avg_loss, mae, pear, labels, preds, masks, sample_ids
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("Trains a regression model for sentiment data with output ranging from -3 to +3 indicating sentiment")
@@ -107,8 +109,8 @@ if __name__ == '__main__':
 
     # Training loop
     for e in tqdm(range(n_epochs), desc = 'MOSEI Regression'):
-        train_loss, train_mae, train_pear, _, _, _ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True, cuda=cuda)
-        test_loss, test_mae, test_pear, test_label, test_pred, test_mask = train_or_eval_model(model, loss_function, test_loader, e, cuda=cuda)
+        train_loss, train_mae, train_pear, _, _, _, _ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True, cuda=cuda)
+        test_loss, test_mae, test_pear, test_label, test_pred, test_mask, _ = train_or_eval_model(model, loss_function, test_loader, e, cuda=cuda)
         writer.add_scalar("Train Loss - MOSEI Regression", train_loss, e)
         writer.add_scalar("Test Loss - MOSEI Regression", test_loss, e)
         writer.add_scalar("Train MAE - MOSEI Regression", train_mae, e)
