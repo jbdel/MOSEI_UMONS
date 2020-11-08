@@ -1,5 +1,5 @@
 import numpy as np, torch, torch.nn as nn, torch.optim as optim, torch.nn.functional as F
-import argparse, time, pickle, os
+import argparse, time, pickle, os, sys
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
@@ -77,6 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=50, metavar='E', help='number of epochs')
     parser.add_argument('--class-weight', action='store_true', default=True, help='class weight')
     parser.add_argument('--log_dir', type=str, default='logs/mosei_categorical', help='Directory for tensorboard logs')
+    parser.add_argument('--model_path', type=str, default='model/categorical.model', help='Path to the final model')
     args = parser.parse_args()
     os.makedirs(args.log_dir, exist_ok = True)
     writer = SummaryWriter(args.log_dir)
@@ -116,13 +117,16 @@ if __name__ == '__main__':
     # Training loop
     for e in tqdm(range(n_epochs), desc = 'MOSEI Categorical'):
         train_loss, train_acc, _,_,_,train_fscore,_ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True)
-        test_loss, test_acc, test_label, test_pred, test_mask, test_fscore, attentions = train_or_eval_model(model,loss_function, test_loader, e)
+        test_loss, test_acc, test_label, test_pred, test_mask, test_fscore, attentions = train_or_eval_model(model, loss_function, test_loader, e)
         writer.add_scalar("Train Loss - MOSEI Categorical", train_loss, e)
         writer.add_scalar("Test Loss - MOSEI Categorical", test_loss, e)
         if best_loss == None or best_loss > test_loss:
             best_loss, best_label, best_pred, best_mask, best_attn = test_loss, test_label, test_pred, test_mask, attentions
+            torch.save(model.state_dict(), args.model_path)
 
-    print('Test performance..')
+    print('Model saved at {}'.format(args.model_path), file=sys.stderr)
+
+    print('Test performance...')
     print('Loss {} accuracy {}'.format(best_loss, round(accuracy_score(best_label,best_pred,sample_weight=best_mask)*100,2)))
     print(classification_report(best_label,best_pred,sample_weight=best_mask,digits=4))
     print(confusion_matrix(best_label,best_pred,sample_weight=best_mask))

@@ -1,5 +1,6 @@
 import numpy as np, torch, torch.nn as nn, torch.optim as optim
 import argparse, time, pandas as pd, os
+import sys
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
@@ -71,6 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, default=128, metavar='BS', help='batch size')
     parser.add_argument('--epochs', type=int, default=100, metavar='E', help='number of epochs')
     parser.add_argument('--log_dir', type=str, default='logs/mosei_regression', help='Directory for tensorboard logs')
+    parser.add_argument('--model_path', type=str, default='model/categorical.model', help='Path to the final model')
     args = parser.parse_args()
     os.makedirs(args.log_dir, exist_ok = True)
     writer = SummaryWriter(args.log_dir)
@@ -116,6 +118,9 @@ if __name__ == '__main__':
         if best_loss == None or best_loss > test_loss:
             best_loss, best_label, best_pred, best_mask, best_pear =\
                     test_loss, test_label, test_pred, test_mask, test_pear
+            torch.save(model.state_dict(), args.model_path)
+
+    print('Model saved at {}'.format(args.model_path), file=sys.stderr)
 
     print('Test performance..')
     print('Loss {} MAE {} r {}'.format(best_loss, round(mean_absolute_error(best_label,best_pred,sample_weight=best_mask),4), best_pear))

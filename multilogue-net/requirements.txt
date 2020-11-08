@@ -44,8 +44,8 @@ MarkupSafe==1.1.1
 matplotlib==3.1.1
 mccabe==0.6.1
 mistune==0.8.4
-mkl-fft==1.0.15
-mkl-service==2.3.0
+mkl-fft
+mkl
 moderngl==5.5.4
 more-itertools==8.1.0
 nbconvert==5.6.1
@@ -74,7 +74,7 @@ pyrsistent==0.15.7
 python-dateutil==2.8.1
 pytz==2019.3
 PyWavelets==1.1.1
-PyYAML==5.1.2
+PyYAML
 pyzmq==18.1.1
 rsa==3.4.2
 s3transfer==0.2.1
