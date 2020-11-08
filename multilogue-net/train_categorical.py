@@ -26,7 +26,7 @@ def get_MOSEI_loaders(path, batch_size=128, valid=0.1, num_workers=0, pin_memory
     test_loader = DataLoader(testset, batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
 
-def train_or_eval_model(model,loss_function, dataloader, epoch, optimizer=None, train=False):    
+def train_or_eval_model(model,loss_function, dataloader, epoch, optimizer=None, train=False, cuda=True):
     count = 0
     losses, preds, labels, masks, alphas_f, alphas_b, vids = [], [], [], [], [], [], []
     assert not train or optimizer!=None
@@ -116,8 +116,8 @@ if __name__ == '__main__':
 
     # Training loop
     for e in tqdm(range(n_epochs), desc = 'MOSEI Categorical'):
-        train_loss, train_acc, _,_,_,train_fscore,_ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True)
-        test_loss, test_acc, test_label, test_pred, test_mask, test_fscore, attentions = train_or_eval_model(model, loss_function, test_loader, e)
+        train_loss, train_acc, _,_,_,train_fscore,_ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True, cuda=cuda)
+        test_loss, test_acc, test_label, test_pred, test_mask, test_fscore, attentions = train_or_eval_model(model, loss_function, test_loader, e, cuda=cuda)
         writer.add_scalar("Train Loss - MOSEI Categorical", train_loss, e)
         writer.add_scalar("Test Loss - MOSEI Categorical", test_loss, e)
         if best_loss == None or best_loss > test_loss:

@@ -28,7 +28,7 @@ def get_MOSEI_loaders(path, batch_size=128, valid=0.1, num_workers=0, pin_memory
     test_loader = DataLoader(testset, batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
 
-def train_or_eval_model(model, loss_function, dataloader, epoch, optimizer=None, train=False):    
+def train_or_eval_model(model, loss_function, dataloader, epoch, optimizer=None, train=False, cuda=True): 
     losses, preds, labels, masks = [], [], [], []
     assert not train or optimizer!=None
     if train:
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, default=128, metavar='BS', help='batch size')
     parser.add_argument('--epochs', type=int, default=100, metavar='E', help='number of epochs')
     parser.add_argument('--log_dir', type=str, default='logs/mosei_regression', help='Directory for tensorboard logs')
-    parser.add_argument('--model_path', type=str, default='model/categorical.model', help='Path to the final model')
+    parser.add_argument('--model_path', type=str, default='model/regression.model', help='Path to the final model')
     args = parser.parse_args()
     os.makedirs(args.log_dir, exist_ok = True)
     writer = SummaryWriter(args.log_dir)
@@ -107,8 +107,8 @@ if __name__ == '__main__':
 
     # Training loop
     for e in tqdm(range(n_epochs), desc = 'MOSEI Regression'):
-        train_loss, train_mae, train_pear,_,_,_ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True)
-        test_loss, test_mae, test_pear, test_label, test_pred, test_mask = train_or_eval_model(model, loss_function, test_loader, e)
+        train_loss, train_mae, train_pear, _, _, _ = train_or_eval_model(model, loss_function, train_loader, e, optimizer, True, cuda=cuda)
+        test_loss, test_mae, test_pear, test_label, test_pred, test_mask = train_or_eval_model(model, loss_function, test_loader, e, cuda=cuda)
         writer.add_scalar("Train Loss - MOSEI Regression", train_loss, e)
         writer.add_scalar("Test Loss - MOSEI Regression", test_loss, e)
         writer.add_scalar("Train MAE - MOSEI Regression", train_mae, e)
