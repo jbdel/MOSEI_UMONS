@@ -3,12 +3,12 @@
 
 ------
 
-Change the hyperparameters in the bash script if needed and run the following commands:
+Written by Hongyi: To run the model, change the hyperparameters in the bash scripts `./train_xxx.sh` if needed and execute the following commands:
 ```bash
 ./train_categorical.sh > model/categorical.result
 ./train_regression.sh > model/regression.result
 ```
-The model will be in model/\*.model and the final evaluation will be in model/\*.result.
+The best model will be saved in model/\*.model and the final evaluation will be saved in model/\*.result.
 
 ------
 
