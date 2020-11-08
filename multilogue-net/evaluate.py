@@ -32,7 +32,7 @@ def eval_categorical(model_path):
     print('avg accuracy =', avg_accuracy)
 
 
-def eval_regression(model_file):
+def eval_regression(model_path):
     D_m_text, D_m_audio, D_m_video, D_m_context = 300, 384, 35, 300
     D_g, D_p, D_e, D_h, D_a = 150, 150, 100, 100, 100
 
