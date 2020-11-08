@@ -1,6 +1,17 @@
 ## Multilogue-net - Official PyTorch Implementation  
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multilogue-net-a-context-aware-rnn-for-multi/multimodal-sentiment-analysis-on-cmu-mosei-1)](https://paperswithcode.com/sota/multimodal-sentiment-analysis-on-cmu-mosei-1?p=multilogue-net-a-context-aware-rnn-for-multi) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multilogue-net-a-context-aware-rnn-for-multi-2/multimodal-sentiment-analysis-on-mosi)](https://paperswithcode.com/sota/multimodal-sentiment-analysis-on-mosi?p=multilogue-net-a-context-aware-rnn-for-multi-2)
-  
+
+------
+
+Change the hyperparameters in the bash script if needed and run the following commands:
+```bash
+./train_categorical.sh > model/categorical.result
+./train_regression.sh > model/regression.result
+```
+The model will be in model/\*.model and the final evaluation will be in model/\*.result.
+
+------
+
 This repository contains the official implemention for the *ACL 2020* workshop [paper](https://www.aclweb.org/anthology/2020.challengehml-1.3/)  :
 > **Multilogue-Net: A Context Aware RNN for Multi-modal Emotion Detection and Sentiment Analysis in Conversation**<br>
 > Aman Shenoy and Ashish Sardana<br>
