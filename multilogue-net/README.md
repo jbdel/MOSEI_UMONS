@@ -10,7 +10,7 @@ To run the model, change the hyperparameters in the bash scripts `./train_xxxxxx
 ./train_categorical.sh lav
 ./train_regression.sh lav
 ```
-The best model will then be saved in `model/[categorical|regression]\_lav.model` and the final evaluation will be saved in `model/[categorical|regression]\_lav.result`.
+The best model will then be saved in `model/[categorical|regression]_lav.model` and the final evaluation will be saved in `model/[categorical|regression]_lav.result`.
 
 For evaluation, run
 ```bash
