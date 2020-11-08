@@ -3,12 +3,20 @@
 
 ------
 
-Written by Hongyi: To run the model, change the hyperparameters in the bash scripts `./train_xxx.sh` if needed and execute the following commands:
+Written by Hongyi:
+
+To run the model, change the hyperparameters in the bash scripts `./train_xxxxxx.sh` if needed and execute the following commands with whatever tag you want (`lav` in this case):
 ```bash
-./train_categorical.sh > model/categorical.result
-./train_regression.sh > model/regression.result
+./train_categorical.sh lav
+./train_regression.sh lav
 ```
-The best model will be saved in model/\*.model and the final evaluation will be saved in model/\*.result.
+The best model will then be saved in model/[categorical|regression]\_lav.model and the final evaluation will be saved in model/[categorical|regression]\_lav.result.
+
+For evaluation, run
+```bash
+python evaluate.py <task>_<tag>
+```
+For example, `python evaluate.py categorical_lav`.
 
 ------
 

@@ -64,10 +64,10 @@ if __name__ == '__main__':
         sys.exit(0)
 
     task = sys.argv[1]
-    if task == 'categorical':
-        eval_categorical('./model/categorical.model')
-    elif task == 'regression':
-        eval_regression('./model/regression.model')
+    if task.startswith('categorical'):
+        eval_categorical('./model/{}.model'.format(task))
+    elif task.startswith('regression'):
+        eval_regression('./model/{}.model'.format(task))
     else:
         raise RuntimeError('Unknown task "{}"'.format(task))
 
