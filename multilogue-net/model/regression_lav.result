@@ -1,0 +1,5 @@
+Namespace(batch_size=128, dropout=0.25, epochs=100, l2=0.0001, log_dir='logs/mosei_regression', lr=0.0001, model_path='model/regression.model', no_cuda=False, rec_dropout=0.1)
+Running on GPU
+Tensorboard logs in logs/mosei_regression
+Test performance..
+Loss 0.609 MAE 0.6022999882698059 r 0.4678

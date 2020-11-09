@@ -1,0 +1,16 @@
+Namespace(batch_size=128, class_weight=True, dropout=0.5, epochs=50, l2=1e-05, log_dir='logs/mosei_categorical', lr=0.0001, model_path='model/categorical.model', no_cuda=False, rec_dropout=0.1)
+Running on GPU
+Tensorboard logs in logs/mosei_categorical
+Test performance...
+Loss 0.5311 accuracy 79.49
+              precision    recall  f1-score   support
+
+           0     0.4536    0.4687    0.4611     783.0
+           1     0.8767    0.8700    0.8734    3401.0
+
+    accuracy                         0.7949    4184.0
+   macro avg     0.6652    0.6694    0.6672    4184.0
+weighted avg     0.7976    0.7949    0.7962    4184.0
+
+[[ 367.  416.]
+ [ 442. 2959.]]
