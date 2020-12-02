@@ -58,6 +58,7 @@ if __name__ == '__main__':
     args = compute_args(parse_args())
 
     # Seed
+    print('Random seed:', args.seed)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     torch.backends.cudnn.deterministic = True
