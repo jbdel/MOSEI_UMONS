@@ -10,11 +10,11 @@ from layers.layer_norm import LayerNorm
 
 
 class LA_Block(nn.Module):
-    def __init__(self, args, i):
+    def __init__(self, args, i, shift=False):
         super(LA_Block, self).__init__()
         self.args = args
         self.sa1 = SA(args)
-        self.sa3 = SGA(args)
+        self.sa3 = SGA(args, shift)
 
         self.last = (i == args.layer-1)
         if not self.last:
@@ -43,7 +43,7 @@ class LA_Block(nn.Module):
 
 
 class Model_LA(nn.Module):
-    def __init__(self, args, vocab_size, pretrained_emb):
+    def __init__(self, args, vocab_size, pretrained_emb, shift=False):
         super(Model_LA, self).__init__()
 
         self.args = args
@@ -76,7 +76,7 @@ class Model_LA(nn.Module):
 
         # Encoder blocks
         self.enc_list = nn.ModuleList(
-            [LA_Block(args, i) for i in range(args.layer)])
+            [LA_Block(args, i, shift) for i in range(args.layer)])
 
         # Flattenting features before proj
         self.attflat_img  = AttFlat(args, 1, merge=True)
