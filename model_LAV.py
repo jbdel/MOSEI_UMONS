@@ -201,7 +201,7 @@ class MHAtt(nn.Module):
         else:
             att_map = F.normalize(scores, dim=3)
             att_map = self.linear_shift(att_map)
-            # TODO: add dropout?
+            att_map = self.dropout(att_map)
 
         return torch.matmul(att_map, value)
 
@@ -244,9 +244,9 @@ class FFAndNorm(nn.Module):
 
 
 
-class Block(nn.Module):
+class LAV_Block(nn.Module):
     def __init__(self, args, i, shift=False):
-        super(Block, self).__init__()
+        super(LAV_Block, self).__init__()
         self.args = args
         self.sa1 = SA(args)
         self.sa2 = SGA(args, shift)
@@ -277,7 +277,7 @@ class Block(nn.Module):
 
         ax = self.att_lang(x, x_mask)
         ay = self.att_audio(y, y_mask)
-        az = self.att_vid(z, y_mask) # TODO: ...?
+        az = self.att_vid(z, z_mask)
 
         return self.norm_l(x + self.dropout(ax)), \
                self.norm_a(y + self.dropout(ay)), \
@@ -319,7 +319,8 @@ class Model_LAV(nn.Module):
         self.adapter_z = nn.Linear(args.video_feat_size, args.hidden_size)
 
         # Encoder blocks
-        self.enc_list = nn.ModuleList([Block(args, i, shift) for i in range(args.layer)])
+        self.enc_list = nn.ModuleList(
+            [LAV_Block(args, i, shift) for i in range(args.layer)])
 
         # Flattenting features before proj
         self.attflat_ac   = AttFlat(args, 1, merge=True)
