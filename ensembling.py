@@ -33,12 +33,11 @@ if __name__ == '__main__':
     index = args.index
 
     # Listing sorted checkpoints
-    ckpts = sorted(glob.glob(os.path.join(args.output, args.name,'best*')), reverse=True)
+    ckpts = sorted(glob.glob(os.path.join(args.output, args.name, 'best*')), reverse=True)
 
     # Load original args
     args = torch.load(ckpts[0])['args']
     args = compute_args(args)
-
 
     # Define the splits to be evaluated
     evaluation_sets = ['valid',
@@ -52,7 +51,7 @@ if __name__ == '__main__':
                pin_memory=True) for set in evaluation_sets}
 
     # Creating net
-    net = eval(args.model)(args, train_dset.vocab_size, train_dset.pretrained_emb).cuda()
+    net = eval(args.model)(args, train_dset.vocab_size, train_dset.pretrained_emb, args.shift).cuda()
 
     # Ensembling sets
     ensemble_preds = {set: {} for set in evaluation_sets}

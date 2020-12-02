@@ -97,11 +97,11 @@ class SA(nn.Module):
 # -------------------------------
 
 class SGA(nn.Module):
-    def __init__(self, args):
+    def __init__(self, args, shift=False):
         super(SGA, self).__init__()
 
-        self.mhatt1 = MHAtt(args)
-        self.mhatt2 = MHAtt(args)
+        self.mhatt1 = MHAtt(args, shift)
+        self.mhatt2 = MHAtt(args, shift)
         self.ffn = FFN(args)
 
         self.dropout1 = nn.Dropout(args.dropout_r)
@@ -133,14 +133,16 @@ class SGA(nn.Module):
 # ------------------------------
 
 class MHAtt(nn.Module):
-    def __init__(self, args):
+    def __init__(self, args, shift=False):
         super(MHAtt, self).__init__()
         self.args = args
+        self.shift = shift
 
         self.linear_v = nn.Linear(args.hidden_size, args.hidden_size)
         self.linear_k = nn.Linear(args.hidden_size, args.hidden_size)
         self.linear_q = nn.Linear(args.hidden_size, args.hidden_size)
         self.linear_merge = nn.Linear(args.hidden_size, args.hidden_size)
+        self.linear_shift = nn.Linear(60, 60) # TODO: remove hardcoded numbers
 
         self.dropout = nn.Dropout(args.dropout_r)
 
@@ -185,11 +187,21 @@ class MHAtt(nn.Module):
             query, key.transpose(-2, -1)
         ) / math.sqrt(d_k)
 
+        # query: 32x4x60x128
+        # key^T: 32x4x128x60
+        # attention: 32x4x60x60
+        # value: 32x4x60x128
+
         if mask is not None:
             scores = scores.masked_fill(mask, -1e9)
 
-        att_map = F.softmax(scores, dim=-1)
-        att_map = self.dropout(att_map)
+        if not self.shift:
+            att_map = F.softmax(scores, dim=-1)
+            att_map = self.dropout(att_map)
+        else:
+            att_map = F.normalize(scores, dim=3)
+            att_map = self.linear_shift(att_map)
+            # TODO: add dropout?
 
         return torch.matmul(att_map, value)
 
@@ -233,12 +245,12 @@ class FFAndNorm(nn.Module):
 
 
 class Block(nn.Module):
-    def __init__(self, args, i):
+    def __init__(self, args, i, shift=False):
         super(Block, self).__init__()
         self.args = args
         self.sa1 = SA(args)
-        self.sa2 = SGA(args)
-        self.sa3 = SGA(args)
+        self.sa2 = SGA(args, shift)
+        self.sa3 = SGA(args, shift)
 
         self.last = (i == args.layer-1)
         if not self.last:
@@ -265,7 +277,7 @@ class Block(nn.Module):
 
         ax = self.att_lang(x, x_mask)
         ay = self.att_audio(y, y_mask)
-        az = self.att_vid(z, y_mask)
+        az = self.att_vid(z, y_mask) # TODO: ...?
 
         return self.norm_l(x + self.dropout(ax)), \
                self.norm_a(y + self.dropout(ay)), \
@@ -274,7 +286,7 @@ class Block(nn.Module):
 
 
 class Model_LAV(nn.Module):
-    def __init__(self, args, vocab_size, pretrained_emb):
+    def __init__(self, args, vocab_size, pretrained_emb, shift=False):
         super(Model_LAV, self).__init__()
 
         self.args = args
@@ -307,7 +319,7 @@ class Model_LAV(nn.Module):
         self.adapter_z = nn.Linear(args.video_feat_size, args.hidden_size)
 
         # Encoder blocks
-        self.enc_list = nn.ModuleList([Block(args, i) for i in range(args.layer)])
+        self.enc_list = nn.ModuleList([Block(args, i, shift) for i in range(args.layer)])
 
         # Flattenting features before proj
         self.attflat_ac   = AttFlat(args, 1, merge=True)

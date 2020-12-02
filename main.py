@@ -19,6 +19,7 @@ def parse_args():
     parser.add_argument('--multi_head', type=int, default=8)
     parser.add_argument('--ff_size', type=int, default=2048)
     parser.add_argument('--word_embed_size', type=int, default=300)
+    parser.add_argument('--shift', action='store_true')
 
     # Data
     parser.add_argument('--lang_seq_len', type=int, default=60)
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     eval_loader = DataLoader(eval_dset, args.batch_size, num_workers=8, pin_memory=True)
 
     # Net
-    net = eval(args.model)(args, train_dset.vocab_size, train_dset.pretrained_emb).cuda()
+    net = eval(args.model)(args, train_dset.vocab_size, train_dset.pretrained_emb, args.shift).cuda()
     print("Total number of parameters : " + str(sum([p.numel() for p in net.parameters()]) / 1e6) + "M")
     net = net.cuda()
 
