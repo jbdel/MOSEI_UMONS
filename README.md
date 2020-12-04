@@ -1,3 +1,9 @@
+<img src="https://acl2020.org/assets/images/logos/acl-logo.png" width=10% /> &nbsp;&nbsp; <img src="https://raw.githubusercontent.com/valohai/ml-logos/5127528b5baadb77a6ea4b999a47b4e86bf0f98b/pytorch.svg" width=25% /><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>ACL2020</b> <br/>
+
+Pytorch implementation of the paper <b>"A Transformer-based joint-encoding for Emotion Recognition and Sentiment Analysis"</b><br/>
+Challenge-HML [Best Paper Award](https://jbdel.github.io/img/HML_best_paper.pdf)
+
 ```
 @inproceedings{delbrouck-etal-2020-transformer,
     title = "A Transformer-based joint-encoding for Emotion Recognition and Sentiment Analysis",
