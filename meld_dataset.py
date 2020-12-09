@@ -25,7 +25,8 @@ class Meld_Dataset(Dataset):
 
         word_file = os.path.join(self.dataroot, name + "_sentences.p")
         audio_file = os.path.join(self.dataroot, name + "_mels.p")
-        video_file = os.path.join(self.dataroot, name + "_mels.p")
+        # video_file = os.path.join(self.dataroot, name + "_r21d.p") # Didnt improve our results
+        video_file = os.path.join(self.dataroot, name + "_mels.p") # Dummy
 
         y_s_file = os.path.join(self.dataroot, name + "_sentiment.p")
         y_e_file = os.path.join(self.dataroot, name + "_emotion.p")

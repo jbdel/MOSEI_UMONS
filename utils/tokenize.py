@@ -10,14 +10,14 @@ def clean(w):
     return re.sub(
             r"([.,'!?\"()*#:;])",
             '',
-            w.decode().lower()
+            w.lower()
             ).replace('-', ' ').replace('/', ' ')
 
 
 def tokenize(key_to_word):
     key_to_sentence = {}
     for k, v in key_to_word.items():
-        key_to_sentence[k] = [clean(w[0]) for w in v if clean(w[0]) != '']
+        key_to_sentence[k] = [clean(w) for w in v if clean(w) != '']
     return key_to_sentence
 
 

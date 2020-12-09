@@ -1,11 +1,11 @@
 import torch
-import numpy as np
-
 
 
 def compute_args(args):
-
     # DataLoader
+    if not hasattr(args, 'dataset'):  # fix for previous version
+        args.dataset = 'MOSEI'
+
     if args.dataset == "MOSEI": args.dataloader = 'Mosei_Dataset'
     if args.dataset == "MELD": args.dataloader = 'Meld_Dataset'
 
@@ -20,7 +20,6 @@ def compute_args(args):
     if args.dataset == 'MOSEI' and args.task == "emotion": args.ans_size = 6
     if args.dataset == 'MELD' and args.task == "emotion": args.ans_size = 7
     if args.dataset == 'MELD' and args.task == "sentiment": args.ans_size = 3
-
 
     if args.dataset == 'MOSEI': args.pred_func = "amax"
     if args.dataset == 'MOSEI' and args.task == "emotion": args.pred_func = "multi_label"

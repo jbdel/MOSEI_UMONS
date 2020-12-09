@@ -287,15 +287,15 @@ class Model_LA(nn.Module):
             batch_first=True
         )
 
-        self.lstm_y = nn.LSTM(
-            input_size=args.audio_feat_size,
-            hidden_size=args.hidden_size,
-            num_layers=1,
-            batch_first=True
-        )
+        # self.lstm_y = nn.LSTM(
+        #     input_size=args.audio_feat_size,
+        #     hidden_size=args.hidden_size,
+        #     num_layers=1,
+        #     batch_first=True
+        # )
 
         # Feature size to hid size
-        # self.adapter = nn.Linear(args.audio_feat_size, args.hidden_size)
+        self.adapter = nn.Linear(args.audio_feat_size, args.hidden_size)
 
         # Encoder blocks
         self.enc_list = nn.ModuleList([Block(args, i) for i in range(args.layer)])
@@ -315,9 +315,9 @@ class Model_LA(nn.Module):
         embedding = self.embedding(x)
 
         x, _ = self.lstm_x(embedding)
-        y, _ = self.lstm_y(y)
+        # y, _ = self.lstm_y(y)
 
-        # y = self.adapter(y)
+        y = self.adapter(y)
 
         for i, dec in enumerate(self.enc_list):
             x_m, x_y = None, None

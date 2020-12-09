@@ -12,13 +12,16 @@ from train import evaluate
 warnings.filterwarnings("ignore")
 
 
+warnings.filterwarnings("ignore")
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=str, default='ckpt/')
     parser.add_argument('--name', type=str, default='exp0/')
+    parser.add_argument('--sets',  nargs='+', default=["valid", "test"])
 
-    parser.add_argument('--index', type=int, default=None)
-    parser.add_argument('--show_report', type=bool, default=True)
+    parser.add_argument('--index', type=int, default=99)
     parser.add_argument('--private_set', type=str, default=None)
 
     args = parser.parse_args()
@@ -27,10 +30,11 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
+
     # Save vars
-    show_report = args.show_report
     private_set = args.private_set
     index = args.index
+    sets = args.sets
 
     # Listing sorted checkpoints
     ckpts = sorted(glob.glob(os.path.join(args.output, args.name,'best*')), reverse=True)
@@ -41,9 +45,8 @@ if __name__ == '__main__':
 
 
     # Define the splits to be evaluated
-    evaluation_sets = ['valid',
-                       'test'] + ([private_set] if private_set is not None else [])
-
+    evaluation_sets = list(sets) + ([private_set] if private_set is not None else [])
+    print("Evaluated sets: ", str(evaluation_sets))
     # Creating dataloader
     train_dset = eval(args.dataloader)('train', args)
     loaders = {set: DataLoader(eval(args.dataloader)(set, args, train_dset.token_to_ix),
@@ -60,6 +63,11 @@ if __name__ == '__main__':
 
     # Iterating over checkpoints
     for i, ckpt in enumerate(ckpts):
+
+        if i >= index:
+            break
+
+        print("###### Ensembling " + str(i+1))
         state_dict = torch.load(ckpt)['state_dict']
         net.load_state_dict(state_dict)
 
@@ -75,37 +83,20 @@ if __name__ == '__main__':
             # Compute set ensembling accuracy
             # Get all ids and answers
             ids = [id for ids, _, _, _, _ in loaders[set] for id in ids]
-            ans = [a for _, _, _, _, ans in loaders[set] for a in ans]
+            ans = [np.array(a) for _, _, _, _, ans in loaders[set] for a in ans]
 
             # for all id, get averaged probabilities
             avg_preds = np.array([np.mean(np.array(ensemble_preds[set][id]), axis=0) for id in ids])
             # Compute accuracies
-            if not set == private_set:
-                accuracy = np.mean(eval(args.pred_func)(avg_preds) == np.array(ans)) * 100
+            if set != private_set:
+                accuracy = np.mean(eval(args.pred_func)(avg_preds) == ans) * 100
                 print("New " + set + " ens. Accuracy :", accuracy)
                 ensemble_accuracies[set].append(accuracy)
 
             if i + 1 == index:
-                if show_report and not set == private_set:
-                    print(classification_report(ans, eval(args.pred_func)(avg_preds)))
-                if set == private_set:
-                    pickle.dump({id: p for id, p in zip(ids, eval(args.pred_func)(avg_preds))},
-                                open(os.path.join(args.output, args.name, private_set + '_avg_preds_' + str(i) + '.p')))
+                print(classification_report(ans, eval(args.pred_func)(avg_preds)))
 
     # Printing overall results
-    for set in ['valid', 'test']:
+    for set in sets:
         print("Max ensemble w-accuracies for " + set + " : " + str(max(ensemble_accuracies[set])))
 
-    # Computing best averaged result over valid and test
-    max_avg = -1.0
-    stats_avg = []
-    for i, acc in enumerate(zip(ensemble_accuracies['valid'], ensemble_accuracies['test'])):
-        av, at = acc
-        avg = (av+at)/2
-        if avg > max_avg:
-            max_avg = avg
-            stats_avg = [i+1, max_avg, av, at]
-
-    with open("best_scores", "a+") as f:
-        print(str(stats_avg) + " - " + args.output + "/" + args.name + "\n")
-        f.write(str(stats_avg) + " - " + args.output + "/" + args.name + "\n")
