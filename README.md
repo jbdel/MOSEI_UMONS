@@ -93,3 +93,7 @@ Ensemble results are of max 5 single models <br>
 Result `Sentiment-7 ensemble` is obtained from these checkpoints : [Download Link](https://drive.google.com/file/d/11BKBbxp2tNZ6Ai1YD-pPrievffYh7orM/view?usp=sharing)<br/>
 Result `Sentiment-2 ensemble` is obtained from these checkpoints : [Download Link](https://drive.google.com/file/d/15PanBXsxXzvmDsVuA5qiWQd33ssezjxn/view?usp=sharing)<br/>
 Result `Emotion ensemble` is obtained from these checkpoints : [Download Link](https://drive.google.com/file/d/1GyXRWhtf0_sJQacy5wT8vHoynwHkMo79/view?usp=sharing)<br/>
+
+#### License
+
+The source code for the site is licensed under the MIT license, which you can find in the MIT-LICENSE.txt file.
