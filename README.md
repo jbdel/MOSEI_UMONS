@@ -24,7 +24,7 @@ Challenge-HML [Best Paper Award](https://jbdel.github.io/img/HML_best_paper.pdf)
 
 #### Model
 
-The model Model_AV is the module used for the UMONS solution to the MOSEI dataset using only linguistic and acoustic inputs.<br/>
+The model Model_LA is the module used for the UMONS solution to the MOSEI dataset using only linguistic and acoustic inputs.<br/>
 Results can be replicated at the following Google Colab sheet: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Ir00q2drUzJ6bwIoOLodPErS6NjleZG4?usp=sharing)
 
 
