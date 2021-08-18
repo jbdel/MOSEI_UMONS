@@ -50,7 +50,7 @@ More informations about the data can be found in the 'data' folder<br/>
 
 #### Training
 
-To train a Model_AV model on the emotion labels, use the following command :
+To train a Model_LA model on the emotion labels, use the following command :
 
 ```
 python main.py --model Model_LA --name mymodel --task emotion --multi_head 4 --ff_size 1024 --hidden_size  512 --layer 4 --batch_size 32 --lr_base 0.0001 --dropout_r 0.1
