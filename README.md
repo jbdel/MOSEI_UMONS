@@ -34,7 +34,8 @@ Create a 3.6 python environement with:
 ```
 torch              1.2.0    
 torchvision        0.4.0   
-numpy              1.18.1    
+numpy              1.18.1
+scikit-learn       0.24.2
 ```
 
 We use GloVe vectors from space. This can be installed to your environement using the following commands :
