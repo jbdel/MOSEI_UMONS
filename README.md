@@ -88,7 +88,7 @@ You should approximate the following results :
 | Emotion-6      | 81.21   |  81.29  | 81.48  |  3    
 
 Ensemble results are of max 5 single models <br>
-7-class and 2-class sentiment and emotion models have been train according to the instructions [here](https://github.com/A2Zadeh/CMU-MultimodalSDK/blob/master/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI/README.md).<br>
+7-class and 2-class sentiment and emotion models have been train according to the instructions [here](https://github.com/CMU-MultiComp-Lab/CMU-MultimodalSDK/tree/main/mmsdk/mmdatasdk/dataset/standard_datasets/CMU_MOSEI).<br>
 
 #### Pre-trained checkpoints:
 Result `Sentiment-7 ensemble` is obtained from these checkpoints : [Download Link](https://drive.google.com/file/d/11BKBbxp2tNZ6Ai1YD-pPrievffYh7orM/view?usp=sharing)<br/>
